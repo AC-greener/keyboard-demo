@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+  <header></header>
+  <main>
+    <div class="wrapper" id="main">
+
+    </div>
+  </main>
+  <footer></footer>
+  <script>
+    keys = [
+      ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+      ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+      ['z', 'x', 'c', 'v', 'b', 'n', 'm']
+    ]
+    
+    hash = {
+      'q': 'http://qq.com',
+      'w': 'http://weibo.com',
+      'e': 'http://ele.me',
+      'r': 'http://renren.com',
+      't': 'http://tianya.com',
+      'y': 'http://youtube.com',
+      'u': 'http://uc.com',
+      'i': 'http://iqiyi.com',
+      'o': 'http://opera.com',
+      'p': undefined,
+      'a': 'http://acfun.tv',
+      's': 'http://sohu.com',
+      'z': 'http://zhihu.com',
+      'm': 'www.mcdonalds.com.cn'
+    }
+
+    //取出localStoarge中的hash值
+    var localStorageHash = JSON.parse(localStorage.getItem('keyboard') || 'null')
+    if (localStorageHash) {
+      hash = localStorageHash
+    }
+
+    var i = 0
+    while (i < keys.length) {
+      var div = document.createElement('div')
+      div.className = 'row'
+      main.appendChild(div)
+      var j = 0
+      console.log( keys[i] instanceof Array)
+      while (j < keys[i].length) {
+        var span = document.createElement('span')
+        span.textContent = keys[i][j]
+        span.className = 'key'
+        var button = document.createElement('button')
+        button.textContent = '编辑'
+        button.id = keys[i][j]
+        button.onclick = function (e) {
+          var key = e.target.id
+          console.log(key)
+
+          var x = prompt('给我一个网址：')
+          hash[key] = x
+          localStorage.setItem('keyboard', JSON.stringify(hash))
+          console.log(hash)
+        }
+        span.appendChild(button)
+        // console.log(span)
+        div.appendChild(span)
+        j++
+      }
+      i++
+    }
+
+    document.onkeypress = function (e) {
+      var key = e.key
+      console.log(e.key)
+      var web = hash[key]
+      window.open(web, '_blank')
+    }
+  </script>
+</body>
+
+</html>

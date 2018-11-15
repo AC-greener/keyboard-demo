@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>导航</title>
+  <title>keyboard</title>
   <link rel="stylesheet" href="./style.css">
+  <style>
+    span {
+      color: white
+    }
+  </style>
 </head>
+
 <body>
   <main>
     <div class="wrapper" id="main">
@@ -14,14 +21,13 @@
     </div>
   </main>
   <script>
-
-    var keys = [
+    keys = [
       ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
       ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
       ['z', 'x', 'c', 'v', 'b', 'n', 'm']
-    ];
+    ]
 
-    var hash = {
+    hash = {
       'q': 'http://qq.com',
       'w': 'http://weibo.com',
       'e': 'http://ele.me',
@@ -38,68 +44,44 @@
       'm': 'www.mcdonalds.com.cn'
     }
 
-    
     i = 0
-    while(i < keys.length) {
+    while (i < keys.length) {
       d = document.createElement('div')
       d.className = 'row'
       main.appendChild(d)
+      
       j = 0
       while(j < keys[i].length) {
         s = document.createElement('span')
         s.className = 'key'
-        s.textContent = keys[i][j]
-        // console.log(s)
+        text = keys[i][j]
+        s.textContent = text
         button = document.createElement('button')
         button.textContent = '编辑'
-        button.id = keys[i][j]
-        button.onclick = function(even) {
-          key = even.target.id
-          // console.log('我被点击了', key)
+        button.id = text
+        button.onclick = function(event) {
+          key = event.target.id
+          
+          //让浏览器弹出一个提示框
+          x = prompt('给我一个网址：')
+          console.log(key)
 
-          //弹出一个提示对话框
-          w = prompt('请输入一个网址')
-          hash[key] = w
-          console.log(w)
+          hash[key] = x
         }
         s.appendChild(button)
         d.appendChild(s)
         j++
       }
-      i++
+      i++ 
     }
 
-    document.onkeypress = function(even) {
-      console.log('按键了')
-      key = even.key
+    document.onkeypress = function(event) {
+      key = event.key
       web = hash[key]
-      console.log(web)
-
-      //打开一个新浏览器窗口
-      window.open(web, '_blank')
+      //让浏览器打开一个新窗口
+      window.open(web)
     }
-
-    a = []
-    a1 = [
-      [1, 2, 3],
-      [4,5],
-      [6,7,8]
-    ]
-    console.log(a1)
-    b = 'hello world'
-    c = {
-      name: '张三',
-      age: 12
-    }
-
-    function foo() {
-      console.log(121212)
-    }
-
-    k = 0
-    for(i = 0; i < 10; i++) {
-      console.log(i)
-    }
+    
 
   </script>
 </body>
