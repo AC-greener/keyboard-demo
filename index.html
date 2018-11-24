@@ -1,106 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>导航</title>
+  <title>Document</title>
   <link rel="stylesheet" href="./style.css">
+  <link type="image/x-icon" rel="shortcut icon" href="favicon.ico" />
+
+  <!-- <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"> -->
+
 </head>
+
 <body>
+  <header></header>
   <main>
     <div class="wrapper" id="main">
 
     </div>
   </main>
+  <footer></footer>
   <script>
-
-    var keys = [
-      ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-      ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-      ['z', 'x', 'c', 'v', 'b', 'n', 'm']
-    ];
-
-    var hash = {
-      'q': 'http://qq.com',
-      'w': 'http://weibo.com',
-      'e': 'http://ele.me',
-      'r': 'http://renren.com',
-      't': 'http://tianya.com',
-      'y': 'http://youtube.com',
-      'u': 'http://uc.com',
-      'i': 'http://iqiyi.com',
-      'o': 'http://opera.com',
-      'p': 'http://ppt.baomitu.com',
-      'a': 'http://acfun.tv',
-      's': 'http://sohu.com',
-      'z': 'http://zhihu.com',
-      'm': 'www.mcdonalds.com.cn'
-    }
-
+    var { keys, hash } = __main()
     
-    i = 0
-    while(i < keys.length) {
-      d = document.createElement('div')
-      d.className = 'row'
-      main.appendChild(d)
-      j = 0
-      while(j < keys[i].length) {
-        s = document.createElement('span')
-        s.className = 'key'
-        s.textContent = keys[i][j]
-        // console.log(s)
-        button = document.createElement('button')
-        button.textContent = '编辑'
-        button.id = keys[i][j]
-        button.onclick = function(even) {
-          key = even.target.id
-          // console.log('我被点击了', key)
+    //生成键盘
+    generateKeyboard(keys, hash)
 
-          //弹出一个提示对话框
-          w = prompt('请输入一个网址')
-          hash[key] = w
-          console.log(w)
-        }
-        s.appendChild(button)
-        d.appendChild(s)
-        j++
+    //响应用户按键
+    listenToKeyboard(hash)
+
+    function __main() {
+      var keys = [
+        ['q', 'w', 'e', 'r', '1', 'y', 'u', 'i', 'o', 'p'],
+        ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+        ['z', 'x', 'c', 'v', 'b', 'n', 'm']
+      ]
+
+      var hash = {
+        'q': 'http://qq.com',
+        'w': 'http://weibo.com',
+        'e': 'http://ele.me',
+        'r': 'http://renren.com',
+        't': 'http://tianya.com',
+        'y': 'http://youtube.com',
+        'u': 'http://uc.com',
+        'i': 'http://iqiyi.com',
+        'o': 'http://opera.com',
+        'p': undefined,
+        'a': 'http://acfun.tv',
+        's': 'http://sohu.com',
+        'z': 'http://zhihu.com',
+        'm': 'www.mcdonalds.com.cn'
       }
-      i++
+
+      //取出localStoarge中的hash值
+      var localStorageHash = getFromLocalStorage('keyboard')
+      if (localStorageHash) {
+        hash = localStorageHash
+      }
+
+      return { keys, hash }
     }
 
-    document.onkeypress = function(even) {
-      console.log('按键了')
-      key = even.key
-      web = hash[key]
-      console.log(web)
-
-      //打开一个新浏览器窗口
-      window.open(web, '_blank')
+    function getFromLocalStorage(name) {
+      return JSON.parse(localStorage.getItem(name) || 'null')
     }
 
-    a = []
-    a1 = [
-      [1, 2, 3],
-      [4,5],
-      [6,7,8]
-    ]
-    console.log(a1)
-    b = 'hello world'
-    c = {
-      name: '张三',
-      age: 12
+    function createTag(tag, attributes) {
+      var element = document.createElement(tag)
+      for (var key in attributes) {    //遍历hash
+        element[key] = attributes[key]
+      }
+      return element
     }
 
-    function foo() {
-      console.log(121212)
+    function createImg(domain) {
+      var img = createTag('img')
+      if (domain) {
+        img.src = domain + '/favicon.ico'
+      } else {
+        img.src = 'https://youtube.com/favicon.ico'
+      }
+      img.onerror = function (e) {
+        e.target.src = 'https://youtube.com/favicon.ico'
+      }
+      return img
     }
 
-    k = 0
-    for(i = 0; i < 10; i++) {
-      console.log(i)
+    function generateKeyboard(keys, hash) {
+      for (var i = 0; i < keys.length; i++) {
+        var div = createTag('div', { className: 'row' })
+        main.appendChild(div)
+        for (var j = 0; j < keys[i].length; j++) {
+          var span = createTag('span', { className: 'text', textContent: keys[i][j]})
+          var button = createTag('button', { textContent: '编辑', id: keys[i][j]})
+          var img = createImg(hash[keys[i][j]])
+
+          button.onclick = function (e) {
+            var button2 = e.target
+            var key = e.target.id
+            var img2 = button2.previousSibling
+            var x = prompt('给我一个网址：')
+            hash[key] = x
+            img2.src = x + '/favicon.ico'
+            img2.onerror = function (e) {
+              e.target.src = 'https://youtube.com/favicon.ico'
+            }
+            localStorage.setItem('keyboard', JSON.stringify(hash))
+          }
+
+          var kbd = createTag('kbd', { className: 'key' })
+          kbd.appendChild(span)
+
+          kbd.appendChild(img)
+          kbd.appendChild(button)
+          div.appendChild(kbd)
+        }
+      }
     }
 
+    function listenToKeyboard(hash) {
+      document.onkeypress = function (e) {
+        var key = e.key
+        console.log(e.key)
+        var web = hash[key]
+        window.open(web, '_blank')
+      }
+    }
+    
   </script>
 </body>
+
 </html>
